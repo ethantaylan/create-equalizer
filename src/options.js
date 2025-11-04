@@ -32,15 +32,27 @@ export const frameworks = [
     createCommand: ({ manager, useTypescript, project }) => {
       const template = useTypescript ? "react-ts" : "react";
       const lookup = {
-        npm: ["npm", ["create", "vite@latest", project, "--", "--template", template]],
-        pnpm: ["pnpm", ["create", "vite@latest", project, "--template", template]],
-        yarn: ["yarn", ["create", "vite", project, "--template", template]],
-        bun: ["bun", ["create", "vite", project, "--template", template]],
+        npm: [
+          "npm",
+          ["create", "vite@latest", project, "--", "--template", template, "--no-interactive"],
+        ],
+        pnpm: [
+          "pnpm",
+          ["create", "vite@latest", project, "--", "--template", template, "--no-interactive"],
+        ],
+        yarn: [
+          "yarn",
+          ["create", "vite", project, "--", "--template", template, "--no-interactive"],
+        ],
+        bun: [
+          "bun",
+          ["create", "vite", project, "--", "--template", template, "--no-interactive"],
+        ],
       };
       return [lookup[manager]];
     },
     notes: [
-      "Enable ESLint and Vitest while running the Vite wizard for a production-ready baseline.",
+      "Equalizer runs Vite non-interactively and handles dependency installation based on your selections.",
     ],
   },
   {

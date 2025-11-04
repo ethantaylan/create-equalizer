@@ -18,25 +18,6 @@ import {
 } from "./blueprint.js";
 import { ensure, slugify } from "./utils.js";
 
-const defaultSelections = {
-  styling: ["tailwind"],
-  data: ["axios"],
-  state: ["redux-toolkit"],
-  tooling: ["eslint", "prettier", "testing-library"],
-};
-
-export const promptExperience = async () =>
-  ensure(
-    await select({
-      message: "How would you like to configure Equalizer?",
-      options: [
-        { value: "cli", label: "Use the interactive CLI wizard" },
-        { value: "ui", label: "Open the Equalizer web assistant (browser)" },
-      ],
-      initialValue: "cli",
-    }),
-  );
-
 const askBoolean = async (message, initialValue = true) =>
   ensure(
     await select({
@@ -49,7 +30,7 @@ const askBoolean = async (message, initialValue = true) =>
     }),
   );
 
-const promptForCategory = async (category, options, framework, initialValues = []) => {
+const promptForCategory = async (category, options, framework) => {
   const filtered = options.filter((option) => isOptionSupported(option, framework));
   if (!filtered.length) {
     return [];
@@ -62,9 +43,7 @@ const promptForCategory = async (category, options, framework, initialValues = [
         label: option.label,
         hint: option.description,
       })),
-      initialValues: initialValues.filter((value) =>
-        filtered.some((option) => option.id === value),
-      ),
+      initialValues: [],
     }),
   );
 };
@@ -96,7 +75,7 @@ export const gatherConfigViaCli = async () => {
 
   const packageManager = ensure(
     await select({
-      message: "Choose your package manager",
+      message: "Choose your package manager (be sure it's installed)",
       options: packageManagers.map((manager) => ({
         value: manager.id,
         label: manager.label,
@@ -123,26 +102,10 @@ export const gatherConfigViaCli = async () => {
     useTypescript = await askBoolean("Do you want TypeScript?", true);
   }
 
-  const styling = await promptForCategory(
-    "styling",
-    stylingOptions,
-    framework,
-    defaultSelections.styling,
-  );
-  const data = await promptForCategory(
-    "data",
-    dataOptions,
-    framework,
-    defaultSelections.data,
-  );
-  const stateDefaults = framework === "react" ? defaultSelections.state : [];
-  const state = await promptForCategory("state", stateOptions, framework, stateDefaults);
-  const tooling = await promptForCategory(
-    "tooling",
-    toolingOptions,
-    framework,
-    defaultSelections.tooling,
-  );
+  const styling = await promptForCategory("styling", stylingOptions, framework);
+  const data = await promptForCategory("data", dataOptions, framework);
+  const state = await promptForCategory("state", stateOptions, framework);
+  const tooling = await promptForCategory("tooling", toolingOptions, framework);
 
   const selections = sanitizeSelections(
     {

@@ -5,10 +5,10 @@ import { frameworkMap } from "./blueprint.js";
 import { getInstallTuple, run, logDivider, buildInstallCommand } from "./utils.js";
 
 const tailwindTuples = {
-  npm: ["npx", ["tailwindcss", "init", "-p"]],
-  pnpm: ["pnpm", ["dlx", "tailwindcss", "init", "-p"]],
-  yarn: ["yarn", ["dlx", "tailwindcss", "init", "-p"]],
-  bun: ["bunx", ["tailwindcss", "init", "-p"]],
+  npm: (cwd) => ["npx", ["tailwindcss", "init", "-p", "--cwd", cwd]],
+  pnpm: (cwd) => ["pnpm", ["dlx", "tailwindcss", "init", "-p", "--cwd", cwd]],
+  yarn: (cwd) => ["yarn", ["dlx", "tailwindcss", "init", "-p", "--cwd", cwd]],
+  bun: (cwd) => ["bunx", ["tailwindcss", "init", "-p", "--cwd", cwd]],
 };
 
 export const scaffoldProject = async (config, aggregation) => {
@@ -45,8 +45,9 @@ export const scaffoldProject = async (config, aggregation) => {
   }
 
   if (config.styling.includes("tailwind") && config.framework !== "angular") {
-    const tuple = tailwindTuples[config.packageManager] ?? tailwindTuples.npm;
-    await run(tuple[0], tuple[1], projectDir);
+    const tupleFactory = tailwindTuples[config.packageManager] ?? tailwindTuples.npm;
+    const [cmd, args] = tupleFactory(projectDir);
+    await run(cmd, args, projectDir);
   }
 
   return {

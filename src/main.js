@@ -1,13 +1,7 @@
 import { intro } from "@clack/prompts";
 import process from "node:process";
 
-import {
-  promptExperience,
-  gatherConfigViaCli,
-  summarizeBlueprint,
-  farewell,
-} from "./prompts.js";
-import { collectConfigViaUi } from "./ui-server.js";
+import { gatherConfigViaCli, summarizeBlueprint, farewell } from "./prompts.js";
 import { scaffoldProject } from "./actions.js";
 import { frameworkMap, packageManagerMap, optionMap } from "./blueprint.js";
 import { logDivider } from "./utils.js";
@@ -15,11 +9,7 @@ import { selectionCategories } from "./options.js";
 
 export const run = async () => {
   intro("Equalizer Front Kit");
-  const experience = await promptExperience();
-  const config =
-    experience === "cli"
-      ? await gatherConfigViaCli()
-      : await collectConfigViaUi();
+  const config = await gatherConfigViaCli();
 
   const { aggregation, architecture } = summarizeBlueprint(config);
   const scaffold = await scaffoldProject(config, aggregation);

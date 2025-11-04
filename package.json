@@ -8,7 +8,7 @@
   "dependencies": {
     "@clack/prompts": "^0.11.0"
   },
-  "description": "Frontend scaffolding CLI with browser UI",
+  "description": "Interactive CLI for scaffolding modern front-end stacks with curated tooling presets",
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
