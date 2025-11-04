@@ -2,7 +2,7 @@
   "name": "@ethantaylan/create-equalizer",
   "version": "0.1.0",
   "bin": {
-    "create-equalizer": "bin/index.js"
+    "create-equalizer": "./bin/index.js"
   },
   "type": "module",
   "dependencies": {
@@ -22,7 +22,11 @@
     "cli",
     "frontend",
     "create",
-    "equalizer"
+    "equalizer",
+    "scaffolding",
+    "tool",
+    "javascript",
+    "web"
   ],
   "author": "Ethan TAYLAN",
   "license": "ISC",
