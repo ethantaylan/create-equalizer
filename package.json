@@ -1,0 +1,33 @@
+{
+  "name": "@ethantaylan/create-equalizer",
+  "version": "0.1.0",
+  "bin": {
+    "create-equalizer": "bin/index.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "@clack/prompts": "^0.11.0"
+  },
+  "description": "Frontend scaffolding CLI with browser UI",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ethantaylan/create-equalizer.git"
+  },
+  "keywords": [
+    "cli",
+    "frontend",
+    "create",
+    "equalizer"
+  ],
+  "author": "Ethan TAYLAN",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ethantaylan/create-equalizer/issues"
+  },
+  "homepage": "https://github.com/ethantaylan/create-equalizer#readme"
+}
