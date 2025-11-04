@@ -7,6 +7,7 @@
 - **Framework aware** presets for React + Vite, Vue 3 + Vite, SvelteKit, and Angular.
 - **Tailored dependencies** for styling, data fetching, state, and tooling choices. Equalizer generates the install commands and runs them for you.
 - **Tailwind automation**: runs `tailwindcss init -p` in the generated project when selected.
+- **Immersive experience** with a colorful banner, animated progress spinners, and tip overlays.
 - **Blueprint summary** with follow-up tasks and suggested project structure.
 
 ## Quick Start
@@ -27,6 +28,8 @@ Follow the prompts to choose:
 - Framework (React, Vue, Angular, SvelteKit)
 - TypeScript preference (enforced for Angular)
 - Styling, data, state, and tooling layers
+
+You can press `Ctrl+C` at any time to abort the wizard; Equalizer stops cleanly without leaving partial installs behind.
 
 Equalizer runs the appropriate `create-*` command, installs runtime and dev dependencies, and sets up Tailwind when requested. When the wizard finishes you receive a summary of commands executed, follow-up tasks, and the resulting architecture.
 

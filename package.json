@@ -6,7 +6,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@clack/prompts": "^0.11.0"
+    "@clack/prompts": "^0.11.0",
+    "picocolors": "^1.1.0"
   },
   "description": "Interactive CLI for scaffolding modern front-end stacks with curated tooling presets",
   "main": "index.js",

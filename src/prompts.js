@@ -7,10 +7,8 @@ import {
   dataOptions,
   stateOptions,
   toolingOptions,
-  selectionCategories,
 } from "./options.js";
 import {
-  frameworkMap,
   isOptionSupported,
   sanitizeSelections,
   aggregateSelections,
@@ -35,6 +33,7 @@ const promptForCategory = async (category, options, framework) => {
   if (!filtered.length) {
     return [];
   }
+
   return ensure(
     await multiselect({
       message: buildCategoryMessage(category),
@@ -44,6 +43,7 @@ const promptForCategory = async (category, options, framework) => {
         hint: option.description,
       })),
       initialValues: [],
+      required: false,
     }),
   );
 };
@@ -51,15 +51,15 @@ const promptForCategory = async (category, options, framework) => {
 const buildCategoryMessage = (category) => {
   switch (category) {
     case "styling":
-      return "Pick the design system and styling layers: (spacebar to select)";
+      return "Pick the design system and styling layers: (spacebar to select, Enter to skip)";
     case "data":
-      return "Choose the data fetching strategy: (spacebar to select)";
+      return "Choose the data fetching strategy: (spacebar to select, Enter to skip)";
     case "state":
-      return "Choose the state management tools: (spacebar to select)";
+      return "Choose the state management tools: (spacebar to select, Enter to skip)";
     case "tooling":
-      return "Select the quality tooling: (spacebar to select)";
+      return "Select the quality tooling: (spacebar to select, Enter to skip)";
     default:
-      return "Select options:";
+      return "Select options: (Enter to skip)";
   }
 };
 
