@@ -1,8 +1,8 @@
 {
-  "name": "@ethantaylan/create-equalizer",
+  "name": "create-equalizer",
   "version": "0.1.0",
   "bin": {
-    "create-equalizer": "./bin/index.js"
+    "create-equalizer": "bin/index.js"
   },
   "type": "module",
   "dependencies": {
