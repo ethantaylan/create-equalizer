@@ -8,13 +8,15 @@ import {
   selectionCategories,
 } from "./options.js";
 
-export const optionMap = [...stylingOptions, ...dataOptions, ...stateOptions, ...toolingOptions].reduce(
-  (acc, option) => {
-    acc[option.id] = option;
-    return acc;
-  },
-  {},
-);
+export const optionMap = [
+  ...stylingOptions,
+  ...dataOptions,
+  ...stateOptions,
+  ...toolingOptions,
+].reduce((acc, option) => {
+  acc[option.id] = option;
+  return acc;
+}, {});
 
 export const frameworkMap = frameworks.reduce((acc, framework) => {
   acc[framework.id] = framework;
@@ -50,18 +52,27 @@ export const sanitizeSelections = (selections, framework) => {
 export const buildArchitecture = (framework, useTailwind) => {
   const lines = ["project/", "|-- public/", "|-- src/"];
   if (framework === "angular") {
-    lines.push("|   |-- app/", "|   |   |-- core/", "|   |   |-- features/", "|   |   `-- shared/");
+    lines.push(
+      "|   |-- app/",
+      "|   |   |-- core/",
+      "|   |   |-- features/",
+      "|   |   `-- shared/"
+    );
   } else {
     lines.push(
       "|   |-- app/",
       "|   |   |-- layout/",
       "|   |   `-- routes/",
       "|   |-- components/",
-      "|   |-- features/",
+      "|   |-- features/"
     );
   }
   lines.push("|   |-- lib/", "|   |-- services/");
-  lines.push(useTailwind ? "|   |-- styles/ (tailwind.css, tokens, utilities)" : "|   |-- styles/");
+  lines.push(
+    useTailwind
+      ? "|   |-- styles/ (tailwind.css, tokens, utilities)"
+      : "|   |-- styles/"
+  );
   lines.push("|   `-- tests/", "|-- scripts/", "`-- docs/");
   return lines;
 };
@@ -75,11 +86,16 @@ export const aggregateSelections = (selections, context) => {
     if (!isOptionSupported(option, context.framework)) {
       return;
     }
-    const spec = typeof option.packages === "function" ? option.packages(context) : option.packages;
+    const spec =
+      typeof option.packages === "function"
+        ? option.packages(context)
+        : option.packages;
     spec?.dependencies?.forEach((dep) => dep && dependencies.add(dep));
     spec?.devDependencies?.forEach((dep) => dep && devDependencies.add(dep));
     const optionNotes =
-      typeof option.notes === "function" ? option.notes(context) : option.notes ?? [];
+      typeof option.notes === "function"
+        ? option.notes(context)
+        : (option.notes ?? []);
     optionNotes.forEach((note) => note && notes.add(note));
   };
 

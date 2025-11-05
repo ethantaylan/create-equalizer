@@ -1,4 +1,3 @@
-
 export const packageManagers = [
   {
     id: "pnpm",
@@ -34,19 +33,51 @@ export const frameworks = [
       const lookup = {
         npm: [
           "npm",
-          ["create", "vite@latest", project, "--", "--template", template, "--no-interactive"],
+          [
+            "create",
+            "vite@latest",
+            project,
+            "--",
+            "--template",
+            template,
+            "--no-interactive",
+          ],
         ],
         pnpm: [
           "pnpm",
-          ["create", "vite@latest", project, "--", "--template", template, "--no-interactive"],
+          [
+            "create",
+            "vite@latest",
+            project,
+            "--",
+            "--template",
+            template,
+            "--no-interactive",
+          ],
         ],
         yarn: [
           "yarn",
-          ["create", "vite", project, "--", "--template", template, "--no-interactive"],
+          [
+            "create",
+            "vite",
+            project,
+            "--",
+            "--template",
+            template,
+            "--no-interactive",
+          ],
         ],
         bun: [
           "bun",
-          ["create", "vite", project, "--", "--template", template, "--no-interactive"],
+          [
+            "create",
+            "vite",
+            project,
+            "--",
+            "--template",
+            template,
+            "--no-interactive",
+          ],
         ],
       };
       return [lookup[manager]];
@@ -76,7 +107,8 @@ export const frameworks = [
   {
     id: "angular",
     label: "Angular",
-    description: "Batteries included framework with DI, RxJS, and CLI generators.",
+    description:
+      "Batteries included framework with DI, RxJS, and CLI generators.",
     docs: "https://angular.dev",
     forceTypescript: true,
     createCommand: ({ manager, project }) => {
@@ -104,7 +136,8 @@ export const frameworks = [
   {
     id: "svelte",
     label: "SvelteKit",
-    description: "Compiled UI with hybrid rendering and delightful transitions.",
+    description:
+      "Compiled UI with hybrid rendering and delightful transitions.",
     docs: "https://kit.svelte.dev",
     createCommand: ({ manager, project }) => {
       const lookup = {
@@ -126,10 +159,10 @@ export const stylingOptions = [
     id: "tailwind",
     label: "Tailwind CSS",
     packages: {
-      devDependencies: ["tailwindcss", "postcss", "autoprefixer"],
+      devDependencies: ["tailwindcss", "@tailwindcss/postcss", "postcss"],
     },
     notes: [
-      "Run `npx tailwindcss init -p` and import the generated styles in your entry point.",
+      "Equalizer wires up Tailwind with the PostCSS plugin and base stylesheet automatically.",
     ],
   },
   {
@@ -144,7 +177,9 @@ export const stylingOptions = [
         "framer-motion",
       ],
     },
-    notes: ["Wrap your app with `<ChakraProvider>` and define tokens under `theme.ts`."],
+    notes: [
+      "Wrap your app with `<ChakraProvider>` and define tokens under `theme.ts`.",
+    ],
   },
   {
     id: "mui",
@@ -158,7 +193,9 @@ export const stylingOptions = [
         "@emotion/styled",
       ],
     },
-    notes: ["Create a theme with `createTheme` and share it through `<ThemeProvider>`."],
+    notes: [
+      "Create a theme with `createTheme` and share it through `<ThemeProvider>`.",
+    ],
   },
   {
     id: "styled-components",
@@ -378,7 +415,9 @@ export const toolingOptions = [
     packages: {
       devDependencies: ["msw"],
     },
-    notes: ["Build request handlers inside `src/mocks` and boot them in tests."],
+    notes: [
+      "Build request handlers inside `src/mocks` and boot them in tests.",
+    ],
   },
   {
     id: "storybook",

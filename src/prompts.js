@@ -25,11 +25,13 @@ const askBoolean = async (message, initialValue = true) =>
         { value: false, label: "No" },
       ],
       initialValue: initialValue ? true : false,
-    }),
+    })
   );
 
 const promptForCategory = async (category, options, framework) => {
-  const filtered = options.filter((option) => isOptionSupported(option, framework));
+  const filtered = options.filter((option) =>
+    isOptionSupported(option, framework)
+  );
   if (!filtered.length) {
     return [];
   }
@@ -44,7 +46,7 @@ const promptForCategory = async (category, options, framework) => {
       })),
       initialValues: [],
       required: false,
-    }),
+    })
   );
 };
 
@@ -69,7 +71,7 @@ export const gatherConfigViaCli = async () => {
       message: "Project name",
       placeholder: "my-app",
       defaultValue: "my-app",
-    }),
+    })
   );
   const projectName = slugify(projectInput || "my-app");
 
@@ -82,7 +84,7 @@ export const gatherConfigViaCli = async () => {
         hint: manager.description,
       })),
       initialValue: "pnpm",
-    }),
+    })
   );
 
   const framework = ensure(
@@ -94,7 +96,7 @@ export const gatherConfigViaCli = async () => {
         hint: framework.description,
       })),
       initialValue: "react",
-    }),
+    })
   );
 
   let useTypescript = framework === "angular";
@@ -114,7 +116,7 @@ export const gatherConfigViaCli = async () => {
       state,
       tooling,
     },
-    framework,
+    framework
   );
 
   return {
@@ -139,11 +141,11 @@ export const summarizeBlueprint = (config) => {
       state: config.state,
       tooling: config.tooling,
     },
-    context,
+    context
   );
   const architecture = buildArchitecture(
     config.framework,
-    config.styling.includes("tailwind"),
+    config.styling.includes("tailwind")
   );
   return { aggregation, architecture };
 };
