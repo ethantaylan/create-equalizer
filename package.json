@@ -1,6 +1,6 @@
 {
   "name": "create-equalizer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "bin": {
     "create-equalizer": "bin/index.js"
   },
