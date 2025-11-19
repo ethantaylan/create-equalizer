@@ -1,7 +1,6 @@
 import { multiselect, outro, select, text } from "@clack/prompts";
 
 import {
-  frameworks,
   packageManagers,
   stylingOptions,
   dataOptions,
@@ -116,22 +115,9 @@ export const gatherConfigViaCli = async () => {
     })
   );
 
-  const framework = ensure(
-    await select({
-      message: "Select your framework",
-      options: frameworks.map((framework) => ({
-        value: framework.id,
-        label: framework.label,
-        hint: framework.description,
-      })),
-      initialValue: "react",
-    })
-  );
+  const framework = "react";
 
-  let useTypescript = framework === "angular";
-  if (framework !== "angular") {
-    useTypescript = await askBoolean("Do you want TypeScript?", true);
-  }
+  const useTypescript = await askBoolean("Do you want TypeScript?", true);
 
   const styling = await promptForCategory("styling", stylingOptions, framework);
   const data = await promptForCategory("data", dataOptions, framework);

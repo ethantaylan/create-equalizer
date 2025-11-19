@@ -1,15 +1,15 @@
 {
-  "name": "create-equalizer",
-  "version": "1.0.5",
+  "name": "create-react-equalizer",
+  "version": "2.0.1",
   "bin": {
-    "create-equalizer": "bin/index.js"
+    "create-react-equalizer": "bin/index.js"
   },
   "type": "module",
   "dependencies": {
     "@clack/prompts": "^0.11.0",
     "picocolors": "^1.1.0"
   },
-  "description": "Interactive CLI for scaffolding modern front-end stacks with curated tooling presets",
+  "description": "Interactive CLI for scaffolding React + Vite stacks with curated tooling presets",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,6 +20,7 @@
   },
   "keywords": [
     "cli",
+    "react",
     "frontend",
     "create",
     "equalizer",

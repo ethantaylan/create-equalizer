@@ -51,22 +51,13 @@ export const sanitizeSelections = (selections, framework) => {
 
 export const buildArchitecture = (framework, useTailwind) => {
   const lines = ["project/", "|-- public/", "|-- src/"];
-  if (framework === "angular") {
-    lines.push(
-      "|   |-- app/",
-      "|   |   |-- core/",
-      "|   |   |-- features/",
-      "|   |   `-- shared/"
-    );
-  } else {
-    lines.push(
-      "|   |-- app/",
-      "|   |   |-- layout/",
-      "|   |   `-- routes/",
-      "|   |-- components/",
-      "|   |-- features/"
-    );
-  }
+  lines.push(
+    "|   |-- app/",
+    "|   |   |-- layout/",
+    "|   |   `-- routes/",
+    "|   |-- components/",
+    "|   |-- features/"
+  );
   lines.push("|   |-- lib/", "|   |-- services/");
   lines.push(
     useTailwind

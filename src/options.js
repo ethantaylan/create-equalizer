@@ -87,72 +87,6 @@ export const frameworks = [
       "Equalizer runs Vite non-interactively and handles dependency installation based on your selections.",
     ],
   },
-  {
-    id: "vue",
-    label: "Vue 3 + Vite",
-    description: "Composition API with great TS support and a calm DX.",
-    docs: "https://vuejs.org",
-    createCommand: ({ manager, project }) => {
-      const lookup = {
-        npm: ["npm", ["create", "vue@latest", project]],
-        pnpm: ["pnpm", ["create", "vue@latest", project]],
-        yarn: ["yarn", ["create", "vue", project]],
-        bun: ["bun", ["create", "vue", project]],
-      };
-      return [lookup[manager]];
-    },
-    notes: [
-      "Choose the TypeScript preset in the Vue CLI wizard if you need typing from day one.",
-    ],
-  },
-  {
-    id: "angular",
-    label: "Angular",
-    description:
-      "Batteries included framework with DI, RxJS, and CLI generators.",
-    docs: "https://angular.dev",
-    forceTypescript: true,
-    createCommand: ({ manager, project }) => {
-      const effectiveManager = manager === "bun" ? "npm" : manager;
-      return [
-        [
-          "npx",
-          [
-            "@angular/cli",
-            "new",
-            project,
-            "--routing",
-            "--style=scss",
-            "--strict",
-            "--package-manager",
-            effectiveManager,
-          ],
-        ],
-      ];
-    },
-    notes: [
-      "Angular enforces TypeScript and encourages feature modules plus standalone components.",
-    ],
-  },
-  {
-    id: "svelte",
-    label: "SvelteKit",
-    description:
-      "Compiled UI with hybrid rendering and delightful transitions.",
-    docs: "https://kit.svelte.dev",
-    createCommand: ({ manager, project }) => {
-      const lookup = {
-        npm: ["npm", ["create", "svelte@latest", project]],
-        pnpm: ["pnpm", ["create", "svelte@latest", project]],
-        yarn: ["yarn", ["create", "svelte", project]],
-        bun: ["bun", ["create", "svelte", project]],
-      };
-      return [lookup[manager]];
-    },
-    notes: [
-      "Select the TypeScript+ESLint preset during the SvelteKit wizard for a polished DX.",
-    ],
-  },
 ];
 
 export const stylingOptions = [
@@ -369,7 +303,7 @@ export const toolingOptions = [
     id: "organize-imports",
     label: "Organize imports on save",
     notes: [
-      "Enable organize imports in your editor (VS Code: set \"editor.codeActionsOnSave\" to run \"source.organizeImports\").",
+      "VS Code organize imports on save is preconfigured in `.vscode/settings.json`.",
     ],
   },
   {

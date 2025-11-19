@@ -1,32 +1,31 @@
-﻿# create-equalizer
+# create-react-equalizer
 
-`create-equalizer` is an interactive command-line scaffolder that spins up opinionated front-end projects with the tooling and integrations you actually use. Pick your framework, package manager, styling system, data layer, state management, and quality tools so Equalizer wires them together and you can start shipping right away.
+`create-react-equalizer` is an interactive command-line scaffolder that spins up an opinionated React + Vite project with the tooling and integrations you actually use. Pick your package manager, styling system, data layer, state management, and quality tools so Equalizer wires them together and you can start shipping right away.
 
 ## Highlights
 - **Guided CLI wizard** built with [@clack/prompts](https://github.com/natemoo-re/clack), no arguments required.
-- **Framework aware** presets for React + Vite, Vue 3 + Vite, SvelteKit, and Angular.
+- **React-first**: always scaffolds React + Vite with optional TypeScript.
 - **Tailored dependencies** for styling, data fetching, state, and tooling choices. Equalizer generates the install commands and runs them for you.
-- **Tailwind automation**: runs `tailwindcss init -p` in the generated project when selected.
+- **Tailwind automation**: wires Tailwind into your React project when selected.
 - **Immersive experience** with a colorful banner, animated progress spinners, and tip overlays.
 - **Blueprint summary** with follow-up tasks and suggested project structure.
 
 ## Quick Start
 
 ```
-npm create equalizer@latest
+npx create-react-equalizer@latest
 # or
-pnpm dlx create-equalizer
+pnpm dlx create-react-equalizer
 # or
-yarn dlx create-equalizer
+yarn dlx create-react-equalizer
 # or
-bunx create-equalizer
+bunx create-react-equalizer
 ```
 
 Follow the prompts to choose:
 
 - Package manager (`pnpm`, `npm`, `yarn`, `bun`)
-- Framework (React, Vue, Angular, SvelteKit)
-- TypeScript preference (enforced for Angular)
+- TypeScript preference
 - Styling, data, state, and tooling layers
 
 You can press `Ctrl+C` at any time to abort the wizard; Equalizer stops cleanly without leaving partial installs behind.
@@ -34,9 +33,9 @@ You can press `Ctrl+C` at any time to abort the wizard; Equalizer stops cleanly 
 Equalizer runs the appropriate `create-*` command, installs runtime and dev dependencies, and sets up Tailwind when requested. When the wizard finishes you receive a summary of commands executed, follow-up tasks, and the resulting architecture.
 
 ## What You Get
-- Project scaffolded with the official CLI for your chosen framework.
+- A React + Vite project scaffolded with the official CLI.
 - Dependencies added based on your selections (for example Axios, TanStack Query, Redux Toolkit, ESLint, Vitest, MSW, and more).
-- Post-install scripts (such as the Tailwind init) executed in the project directory.
+- Post-install scripts (such as Tailwind wiring) executed in the project directory.
 - Structured directory recommendations to help maintain consistency across projects.
 
 ## FAQ

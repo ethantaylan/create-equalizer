@@ -1,5 +1,5 @@
 import { existsSync } from "node:fs";
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import process from "node:process";
 
@@ -176,6 +176,39 @@ const clearAppStyles = async (projectDir) => {
   await writeFile(stylesPath, "");
 };
 
+const ensureOrganizeImportsSetting = async (projectDir) => {
+  const vscodeDir = join(projectDir, ".vscode");
+  const settingsPath = join(vscodeDir, "settings.json");
+  await mkdir(vscodeDir, { recursive: true });
+
+  let settings = {};
+  if (existsSync(settingsPath)) {
+    try {
+      const existing = await readFile(settingsPath, "utf8");
+      settings = JSON.parse(existing || "{}");
+    } catch {
+      settings = {};
+    }
+  }
+
+  const codeActions =
+    settings["editor.codeActionsOnSave"] &&
+    typeof settings["editor.codeActionsOnSave"] === "object" &&
+    !Array.isArray(settings["editor.codeActionsOnSave"])
+      ? settings["editor.codeActionsOnSave"]
+      : {};
+
+  const nextSettings = {
+    ...settings,
+    "editor.codeActionsOnSave": {
+      ...codeActions,
+      "source.organizeImports": "always",
+    },
+  };
+
+  await writeFile(settingsPath, `${JSON.stringify(nextSettings, null, 2)}\n`);
+};
+
 const injectEqualizerShowcase = async (projectDir, config) => {
   const componentPath = findFirstExisting(projectDir, appComponentCandidates);
   if (!componentPath) return;
@@ -265,14 +298,12 @@ export const scaffoldProject = async (config, aggregation) => {
   const projectDir = resolve(process.cwd(), config.projectName);
   log.info(`${pc.bold("Project directory")} ${pc.dim(projectDir)}`);
 
-  if (config.framework !== "angular") {
-    await runWithSpinner(
-      pc.cyan("Installing base dependencies"),
-      config.packageManager,
-      ["install"],
-      projectDir
-    );
-  }
+  await runWithSpinner(
+    pc.cyan("Installing base dependencies"),
+    config.packageManager,
+    ["install"],
+    projectDir
+  );
 
   const runtimeTuple = getInstallTuple(
     config.packageManager,
@@ -306,10 +337,16 @@ export const scaffoldProject = async (config, aggregation) => {
     log.info(pc.yellow("No additional dev dependencies selected"));
   }
 
-  if (config.styling.includes("tailwind") && config.framework !== "angular") {
+  if (config.styling.includes("tailwind")) {
     log.info(pc.cyan("Configuring Tailwind CSS"));
     await configureTailwind(projectDir, config);
     log.info(pc.green("Tailwind CSS configured"));
+  }
+
+  if (config.tooling.includes("organize-imports")) {
+    log.info(pc.cyan("Enabling organize imports on save for VS Code"));
+    await ensureOrganizeImportsSetting(projectDir);
+    log.info(pc.green("VS Code organize imports configured"));
   }
 
   log.success(pc.green("Scaffolding complete!"));
