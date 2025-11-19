@@ -6,7 +6,7 @@ import process from "node:process";
 import { spinner, log } from "@clack/prompts";
 import pc from "picocolors";
 
-import { frameworkMap } from "./blueprint.js";
+import { frameworkMap, packageManagerMap, optionMap } from "./blueprint.js";
 import {
   getInstallTuple,
   run,
@@ -16,20 +16,13 @@ import {
   registerSpinner,
 } from "./utils.js";
 
-const tailwindTuples = {
-  npm: () => ["npx", ["tailwindcss", "init"]],
-  pnpm: () => ["pnpm", ["dlx", "tailwindcss", "init"]],
-  yarn: () => ["yarn", ["dlx", "tailwindcss", "init"]],
-  bun: () => ["bunx", ["tailwindcss", "init"]],
-};
-
-const runWithSpinner = async (title, cmd, args, cwd) => {
+const runWithSpinner = async (title, cmd, args, cwd, options) => {
   const s = spinner();
   const release = registerSpinner(s);
   const display = `${title} ${formatCommand(cmd, args)}`;
   s.start(display);
   try {
-    await run(cmd, args, cwd);
+    await run(cmd, args, cwd, options);
     s.stop(pc.green(`[done] ${title}`));
   } catch (error) {
     s.stop(pc.red(`[failed] ${title}`));
@@ -63,6 +56,38 @@ const postcssConfigCandidates = [
 const appComponentCandidates = ["src/App.tsx", "src/App.jsx"];
 
 const appStylesCandidates = ["src/App.css", "src/app.css"];
+
+const buildSpecSheet = (config) => {
+  const specs = [];
+  const pushEntry = (label, value) => {
+    if (!value) return;
+    if (Array.isArray(value)) {
+      if (!value.length) return;
+      specs.push({ label, value: value.join(", ") });
+      return;
+    }
+    specs.push({ label, value });
+  };
+
+  const framework = frameworkMap[config.framework];
+  const manager = packageManagerMap[config.packageManager];
+
+  pushEntry("Framework", framework?.label ?? config.framework);
+  pushEntry("Language", config.useTypescript ? "TypeScript" : "JavaScript");
+  pushEntry("Package manager", manager?.label ?? config.packageManager);
+
+  const mapOptionLabels = (ids = []) =>
+    ids
+      .map((id) => optionMap[id]?.label ?? id)
+      .filter(Boolean);
+
+  pushEntry("Styling", mapOptionLabels(config.styling));
+  pushEntry("Data", mapOptionLabels(config.data));
+  pushEntry("State", mapOptionLabels(config.state));
+  pushEntry("Tooling", mapOptionLabels(config.tooling));
+
+  return specs;
+};
 
 const findFirstExisting = (projectDir, candidates) => {
   for (const candidate of candidates) {
@@ -151,41 +176,55 @@ const clearAppStyles = async (projectDir) => {
   await writeFile(stylesPath, "");
 };
 
-const injectEqualizerShowcase = async (projectDir) => {
+const injectEqualizerShowcase = async (projectDir, config) => {
   const componentPath = findFirstExisting(projectDir, appComponentCandidates);
   if (!componentPath) return;
   const isTsx = componentPath.endsWith(".tsx");
-  const channelsDeclaration = isTsx
-    ? "const channels: number[] = [12, 20, 14, 26, 18, 22]"
-    : "const channels = [12, 20, 14, 26, 18, 22]";
-  const formatterDeclaration = isTsx
-    ? "const formatChannelLabel = (index: number): string => `CH ${String(index + 1).padStart(2, '0')}`"
-    : "const formatChannelLabel = (index) => `CH ${String(index + 1).padStart(2, '0')}`";
+  const specSheet = buildSpecSheet(config);
+  const projectNameLiteral = JSON.stringify(config.projectName);
+  const specLiteral = JSON.stringify(specSheet, null, 2);
   const template = `import './App.css'
 
-${channelsDeclaration}
-${formatterDeclaration}
+const projectName = ${projectNameLiteral};
+const specs = ${specLiteral};
 
 ${isTsx ? "function App(): JSX.Element" : "function App()"} {
   return (
-   <div
-  className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100 flex items-center justify-center p-6"
->
-  <div
-    className="relative w-full max-w-3xl rounded-[2.5rem] border border-slate-800/80 bg-slate-900/60 p-10 shadow-[0_25px_80px_-20px_rgba(56,189,248,0.55)] backdrop-blur"
-  >
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-xs uppercase tracking-[0.45em] text-sky-400/80">
-          Equalizer
-        </p>
-        <h1 className="mt-2 text-3xl font-semibold text-slate-50">
-          Front-End Kit generator
-        </h1>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100 flex items-center justify-center p-6">
+      <div className="w-full max-w-4xl space-y-8 rounded-[2.5rem] border border-white/10 bg-white/5 p-10 shadow-[0_35px_120px_-30px_rgba(56,189,248,0.4)] backdrop-blur">
+        <div className="space-y-3">
+          <p className="text-xs uppercase tracking-[0.6em] text-sky-400/80">
+            Equalizer Spec Sheet
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-3xl font-semibold text-white">
+              {projectName}
+            </h1>
+            <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-200">
+              Configured
+            </span>
+          </div>
+          <p className="text-sm text-slate-400">
+            A quick snapshot of the stack and tooling you selected.
+          </p>
+        </div>
+        <dl className="grid gap-4 sm:grid-cols-2">
+          {specs.map((item) => (
+            <div
+              key={item.label}
+              className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-inner shadow-black/40"
+            >
+              <dt className="text-xs uppercase tracking-[0.35em] text-slate-400">
+                {item.label}
+              </dt>
+              <dd className="mt-2 text-base font-medium text-white">
+                {item.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </div>
-  </div>
-</div>
 
   )
 }
@@ -195,12 +234,12 @@ export default App
   await writeFile(componentPath, template);
 };
 
-const configureTailwind = async (projectDir) => {
+const configureTailwind = async (projectDir, config) => {
   await ensureTailwindConfig(projectDir);
   await ensurePostcssConfig(projectDir);
   await ensureTailwindBaseStyles(projectDir);
   await clearAppStyles(projectDir);
-  await injectEqualizerShowcase(projectDir);
+  await injectEqualizerShowcase(projectDir, config);
 };
 
 export const scaffoldProject = async (config, aggregation) => {
@@ -212,8 +251,15 @@ export const scaffoldProject = async (config, aggregation) => {
   });
 
   logDivider("Scaffolding");
-  for (const [cmd, args] of createSteps) {
-    await runWithSpinner(pc.cyan("Creating project"), cmd, args, process.cwd());
+  for (const step of createSteps) {
+    const [cmd, args, execOptions] = step;
+    await runWithSpinner(
+      pc.cyan("Creating project"),
+      cmd,
+      args,
+      process.cwd(),
+      execOptions
+    );
   }
 
   const projectDir = resolve(process.cwd(), config.projectName);
@@ -261,16 +307,9 @@ export const scaffoldProject = async (config, aggregation) => {
   }
 
   if (config.styling.includes("tailwind") && config.framework !== "angular") {
-    const tupleFactory =
-      tailwindTuples[config.packageManager] ?? tailwindTuples.npm;
-    const [cmd, args] = tupleFactory();
-    await runWithSpinner(
-      pc.cyan("Initializing Tailwind CSS"),
-      cmd,
-      args,
-      projectDir
-    );
-    await configureTailwind(projectDir);
+    log.info(pc.cyan("Configuring Tailwind CSS"));
+    await configureTailwind(projectDir, config);
+    log.info(pc.green("Tailwind CSS configured"));
   }
 
   log.success(pc.green("Scaffolding complete!"));

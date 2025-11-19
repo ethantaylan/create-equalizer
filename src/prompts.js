@@ -7,6 +7,7 @@ import {
   dataOptions,
   stateOptions,
   toolingOptions,
+  singleChoiceCategories,
 } from "./options.js";
 import {
   isOptionSupported,
@@ -15,6 +16,8 @@ import {
   buildArchitecture,
 } from "./blueprint.js";
 import { ensure, slugify } from "./utils.js";
+
+const singleChoiceSet = new Set(singleChoiceCategories);
 
 const askBoolean = async (message, initialValue = true) =>
   ensure(
@@ -28,6 +31,8 @@ const askBoolean = async (message, initialValue = true) =>
     })
   );
 
+const buildSkipValue = (category) => `__skip_${category}__`;
+
 const promptForCategory = async (category, options, framework) => {
   const filtered = options.filter((option) =>
     isOptionSupported(option, framework)
@@ -36,9 +41,30 @@ const promptForCategory = async (category, options, framework) => {
     return [];
   }
 
+  const isSingleChoice = singleChoiceSet.has(category);
+  const message = buildCategoryMessage(category, isSingleChoice);
+  if (isSingleChoice) {
+    const skipValue = buildSkipValue(category);
+    const selection = ensure(
+      await select({
+        message,
+        options: [
+          { value: skipValue, label: "None" },
+          ...filtered.map((option) => ({
+            value: option.id,
+            label: option.label,
+            hint: option.description,
+          })),
+        ],
+        initialValue: skipValue,
+      })
+    );
+    return selection === skipValue ? [] : [selection];
+  }
+
   return ensure(
     await multiselect({
-      message: buildCategoryMessage(category),
+      message,
       options: filtered.map((option) => ({
         value: option.id,
         label: option.label,
@@ -50,18 +76,21 @@ const promptForCategory = async (category, options, framework) => {
   );
 };
 
-const buildCategoryMessage = (category) => {
+const buildCategoryMessage = (category, isSingleChoice) => {
+  const navigation = isSingleChoice
+    ? "(arrow keys to highlight, Enter to choose or skip)"
+    : "(spacebar to select, Enter to skip)";
   switch (category) {
     case "styling":
-      return "Pick the design system and styling layers: (spacebar to select, Enter to skip)";
+      return `Pick the design system and styling layers: ${navigation}`;
     case "data":
-      return "Choose the data fetching strategy: (spacebar to select, Enter to skip)";
+      return `Choose the data fetching strategy: ${navigation}`;
     case "state":
-      return "Choose the state management tools: (spacebar to select, Enter to skip)";
+      return `Choose the state management tools: ${navigation}`;
     case "tooling":
-      return "Select the quality tooling: (spacebar to select, Enter to skip)";
+      return `Select the quality tooling: ${navigation}`;
     default:
-      return "Select options: (Enter to skip)";
+      return `Select options: ${navigation}`;
   }
 };
 

@@ -46,13 +46,20 @@ export const ensure = (value) => {
   return value;
 };
 
-export const run = (cmd, args, cwd) =>
+export const run = (cmd, args, cwd, options = {}) =>
   new Promise((resolve, reject) => {
+    const stdio =
+      options.input !== undefined ? ["pipe", "inherit", "inherit"] : "inherit";
     const child = spawn(cmd, args, {
       cwd,
-      stdio: "inherit",
+      stdio,
       shell: process.platform === "win32",
+      env: { ...process.env, ...(options.env ?? {}) },
     });
+    if (options.input !== undefined && child.stdin) {
+      child.stdin.write(options.input);
+      child.stdin.end();
+    }
     child.on("close", (code) => {
       if (code === 0) {
         resolve();

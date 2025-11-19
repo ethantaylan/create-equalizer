@@ -1,6 +1,6 @@
 {
   "name": "create-equalizer",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "bin": {
     "create-equalizer": "bin/index.js"
   },
@@ -11,7 +11,6 @@
   },
   "description": "Interactive CLI for scaffolding modern front-end stacks with curated tooling presets",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

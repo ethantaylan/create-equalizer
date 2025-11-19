@@ -42,6 +42,7 @@ export const frameworks = [
             template,
             "--no-interactive",
           ],
+          { input: "y\n" },
         ],
         pnpm: [
           "pnpm",
@@ -365,6 +366,13 @@ export const toolingOptions = [
     notes: ["Create a `.prettierrc` file and wire it into your CI pipeline."],
   },
   {
+    id: "organize-imports",
+    label: "Organize imports on save",
+    notes: [
+      "Enable organize imports in your editor (VS Code: set \"editor.codeActionsOnSave\" to run \"source.organizeImports\").",
+    ],
+  },
+  {
     id: "testing-library",
     label: "Testing Library",
     packages: ({ framework, useTypescript }) => {
@@ -429,3 +437,4 @@ export const toolingOptions = [
 ];
 
 export const selectionCategories = ["styling", "data", "state", "tooling"];
+export const singleChoiceCategories = ["styling", "data", "state"];
